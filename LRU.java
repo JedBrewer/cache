@@ -27,6 +27,15 @@ public class LRU<E> extends LinkedHashMap<String, E> implements Cacher<E> {
         this.lookup = lookup;
     }
 
+    static int roundPow2(int n) {
+        int i = 0;
+        while (n > 1) {
+            n >>>= 1;
+            i++;
+        }
+        return n << i;
+    }
+
     public E get(String key) {
         E r = super.get(key);
         if (r == null)
@@ -38,20 +47,10 @@ public class LRU<E> extends LinkedHashMap<String, E> implements Cacher<E> {
         return cacheSize;
     }
 
+    // specifies that the least recently used entry should be removed when a new record is added,
+    // and the cache is at capacity.
     @Override
     protected boolean removeEldestEntry(Map.Entry<String, E> eldest) {
         return this.size() >= cacheSize;
-    }
-
-
-// Static utilities
-
-    static int roundPow2(int n) {
-        int i = 0;
-        while (n > 1) {
-            n >>>= 1;
-            i++;
-        }
-        return n << i;
     }
 }

@@ -58,14 +58,14 @@ public interface Cacher<E> {
 class CacheFactory {
     private static Map<Class<? extends Cacher>, BiFunction> registry = new HashMap<>();
 
-    public static <E, T extends Cacher<E>> void register(Class<T> clazz,
-                                                         BiFunction<Integer, Function<String, E>, T> maker) {
-        registry.put(clazz, maker);
-    }
-
     // This registers the preexisting caching mechanisms, as well as defining the idiomatic form of registration.
     static {
         register(LRU.class, LRU::new);
+    }
+
+    public static <E, T extends Cacher<E>> void register(Class<T> clazz,
+                                                         BiFunction<Integer, Function<String, E>, T> maker) {
+        registry.put(clazz, maker);
     }
 
     public static <E, T extends Cacher<E>> T make(Class<T> clazz, int cacheSize, Function<String, E> lookup) {
